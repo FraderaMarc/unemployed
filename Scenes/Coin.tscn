@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://l5xfoxrn415c"]
+
+[ext_resource type="Texture2D" uid="uid://bg5n557ytqptk" path="res://assets/Idle/Items/MonjetaAnimada.png" id="1_qrc3l"]
+[ext_resource type="Script" uid="uid://g6d4aqfws4dn" path="res://Scripts/coin.gd" id="1_somhs"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjfxq"]
+radius = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_somhs"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(164, 0, 136, 363)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wjfxq"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(300, 0, 136, 363)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjf33"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(436, 0, 136, 363)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_phb8h"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(660, 0, 132, 363)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_npqt6"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(531, 0, 140, 363)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ma10"]
+atlas = ExtResource("1_qrc3l")
+region = Rect2(28, 0, 136, 363)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8sg27"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_somhs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wjfxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjf33")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_phb8h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_npqt6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ma10")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="Coin" type="Area2D" unique_id=447073947]
+script = ExtResource("1_somhs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867580936]
+shape = SubResource("CircleShape2D_wjfxq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=35423442]
+position = Vector2(1.9073486e-06, 3.8146973e-06)
+scale = Vector2(0.099203356, 0.09627632)
+sprite_frames = SubResource("SpriteFrames_8sg27")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.91228974
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

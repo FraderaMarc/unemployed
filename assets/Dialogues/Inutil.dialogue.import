@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://bcou3ve73pji1"
+path="res://.godot/imported/Inutil.dialogue-bb6bfd964c71ce32e95d4c30e48cf4c9.tres"
+
+[deps]
+
+source_file="res://assets/Dialogues/Inutil.dialogue"
+dest_files=["res://.godot/imported/Inutil.dialogue-bb6bfd964c71ce32e95d4c30e48cf4c9.tres"]
+
+[params]
+
+defaults=true

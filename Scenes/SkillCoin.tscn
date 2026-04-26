@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://b86a2xenjhb26"]
+
+[ext_resource type="Script" uid="uid://bha6vydph8so8" path="res://Scenes/skill_coin.gd" id="1_b1idg"]
+[ext_resource type="Texture2D" uid="uid://dg4xf3a4mm6ra" path="res://assets/Idle/Items/SkillCoin.png" id="2_t2m6s"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjfxq"]
+radius = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1idg"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(0, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3d0t0"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(16, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_raev5"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(32, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rri0e"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(48, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_csdlq"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(64, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2sjws"]
+atlas = ExtResource("2_t2m6s")
+region = Rect2(80, 0, 16, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8sg27"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b1idg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3d0t0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_raev5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rri0e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_csdlq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2sjws")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="SkillCoin" type="Area2D" unique_id=447073947]
+script = ExtResource("1_b1idg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867580936]
+position = Vector2(32, 16)
+shape = SubResource("CircleShape2D_wjfxq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=35423442]
+position = Vector2(32, 16)
+scale = Vector2(0.59374994, 0.5416666)
+sprite_frames = SubResource("SpriteFrames_8sg27")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.11214311
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

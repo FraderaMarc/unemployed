@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://bqv64ryv4eny6"
+path="res://.godot/imported/Manel.dialogue-f5194e809938f543e9628f964ffc92cb.tres"
+
+[deps]
+
+source_file="res://assets/Dialogues/Manel.dialogue"
+dest_files=["res://.godot/imported/Manel.dialogue-f5194e809938f543e9628f964ffc92cb.tres"]
+
+[params]
+
+defaults=true

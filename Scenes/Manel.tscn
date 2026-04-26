@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://qgljmnyxx4g5"]
+
+[ext_resource type="Script" uid="uid://jo1l3kt2g26d" path="res://Scenes/manel.gd" id="1_i0he5"]
+[ext_resource type="Texture2D" uid="uid://dmaiqrsd7e3g0" path="res://assets/Idle/NPCs/Coronel_Manel.png" id="1_r7cy1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iuuqv"]
+size = Vector2(48, 64)
+
+[node name="Node2D" type="Node2D" unique_id=951309466]
+script = ExtResource("1_i0he5")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1737013585]
+position = Vector2(23.749992, 22.749996)
+scale = Vector2(0.09700004, 0.10100001)
+texture = ExtResource("1_r7cy1")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=525146543]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=348115996]
+position = Vector2(24, 16)
+shape = SubResource("RectangleShape2D_iuuqv")

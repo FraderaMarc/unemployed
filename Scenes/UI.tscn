@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://yakulytpn37y"]
+
+[ext_resource type="Script" uid="uid://dg3dyxixlqgg0" path="res://Scenes/ui.gd" id="1_nxvpl"]
+[ext_resource type="Texture2D" uid="uid://cs2rjijq6p1rb" path="res://assets/Idle/Items/Monjeta.png" id="1_w371h"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=498001494]
+script = ExtResource("1_nxvpl")
+
+[node name="Control" type="Control" parent="." unique_id=260733964]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 68.0
+offset_bottom = 59.0
+
+[node name="Node2D" type="Node2D" parent="Control" unique_id=670128089]
+position = Vector2(18, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Control/Node2D" unique_id=39937821]
+position = Vector2(21, 37)
+scale = Vector2(0.120638475, 0.11243082)
+texture = ExtResource("1_w371h")
+
+[node name="Label" type="Label" parent="Control" unique_id=1713990276]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 1.0
+offset_right = 167.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 48
+text = "0"

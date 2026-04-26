@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bbaucuq68s2ts"]
+
+[ext_resource type="Script" uid="uid://cihnk247iauds" path="res://Scripts/mercedes.gd" id="1_gcdtj"]
+[ext_resource type="Texture2D" uid="uid://byh5a2uoaouwc" path="res://assets/Idle/NPCs/Mercedes/Mercedes.png" id="2_rwj7l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ermvm"]
+size = Vector2(85, 86.5)
+
+[node name="Mercedes" type="Node2D" unique_id=322092557 groups=["npc"]]
+script = ExtResource("1_gcdtj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=976335151 groups=["npc"]]
+position = Vector2(21, 15.000001)
+scale = Vector2(0.057812482, 0.058177806)
+texture = ExtResource("2_rwj7l")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=899906718]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=874708589]
+position = Vector2(10.5, -3.75)
+shape = SubResource("RectangleShape2D_ermvm")

@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dlrc23p60qkdt"
+path="res://.godot/imported/Mercedes.dialogue-5f6a50f96ce1eaacdfb82a9163b57c1c.tres"
+
+[deps]
+
+source_file="res://assets/Dialogues/Mercedes.dialogue"
+dest_files=["res://.godot/imported/Mercedes.dialogue-5f6a50f96ce1eaacdfb82a9163b57c1c.tres"]
+
+[params]
+
+defaults=true

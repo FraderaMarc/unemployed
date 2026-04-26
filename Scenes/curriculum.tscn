@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://0m53fjtocndp"]
+
+[ext_resource type="Script" uid="uid://b8f8npm1o8n0h" path="res://Scripts/curriculum.gd" id="1_cw782"]
+[ext_resource type="Texture2D" uid="uid://bhc5cwrq2lhu6" path="res://assets/Idle/UI/BotonMissions.png" id="1_olm4d"]
+[ext_resource type="Texture2D" uid="uid://cdcwfgn74wu5g" path="res://assets/Idle/UI/SkillTreeButton.png" id="2_cw782"]
+
+[node name="Curriculum" type="Control" unique_id=1250426693]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cw782")
+
+[node name="Panel" type="Panel" parent="." unique_id=2122386289]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 320.0
+offset_top = 32.0
+offset_right = -384.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FotoPerfil" type="TextureButton" parent="Panel" unique_id=1083074612]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 56.0
+offset_right = 104.0
+offset_bottom = 152.0
+toggle_mode = true
+
+[node name="Missiones" type="TextureButton" parent="Panel" unique_id=1635444485]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 56.0
+offset_right = 416.0
+offset_bottom = 152.0
+toggle_mode = true
+texture_normal = ExtResource("1_olm4d")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SkillTree" type="TextureButton" parent="Panel" unique_id=1467340059]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 208.0
+offset_right = 416.0
+offset_bottom = 352.0
+toggle_mode = true
+texture_normal = ExtResource("2_cw782")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Stats" type="TextureButton" parent="Panel" unique_id=175511846]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 208.0
+offset_right = 112.0
+offset_bottom = 552.0
+toggle_mode = true
+
+[node name="Logros" type="TextureButton" parent="Panel" unique_id=881079726]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 408.0
+offset_right = 416.0
+offset_bottom = 544.0
+toggle_mode = true
+
+[connection signal="pressed" from="Panel/SkillTree" to="." method="_on_skill_tree_pressed"]

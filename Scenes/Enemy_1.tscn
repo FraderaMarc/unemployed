@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bo8ugg1ras7md"]
+
+[ext_resource type="Script" uid="uid://chwwyxo48k2bi" path="res://Scripts/enemy_1.gd" id="1_6708m"]
+[ext_resource type="Texture2D" uid="uid://dn2o5yf2utxja" path="res://assets/Idle/Enemigos/Hormiga/Walk/Hormiga_Walk_1.png" id="2_k3w01"]
+[ext_resource type="Texture2D" uid="uid://budmlcww73e4j" path="res://assets/Idle/Enemigos/Hormiga/Walk/Hormiga_Walk_2.png" id="3_dhaff"]
+[ext_resource type="Texture2D" uid="uid://e3j6dks2ysl8" path="res://assets/Idle/Enemigos/Hormiga/Walk/Hormiga_Walk_3.png" id="4_0o774"]
+[ext_resource type="Texture2D" uid="uid://ckjnxxvslae5" path="res://assets/Idle/Enemigos/Hormiga/Walk/Hormiga_Walk_4.png" id="5_qgf3k"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_adqib"]
+atlas = ExtResource("2_k3w01")
+region = Rect2(0, 0, 560, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsu73"]
+atlas = ExtResource("3_dhaff")
+region = Rect2(0, 0, 555, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x6saj"]
+atlas = ExtResource("4_0o774")
+region = Rect2(0, 0, 535, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gy2ur"]
+atlas = ExtResource("5_qgf3k")
+region = Rect2(0, 0, 513, 911)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tw7yd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_adqib")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsu73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x6saj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gy2ur")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cr6q"]
+size = Vector2(10, 6.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_intvb"]
+size = Vector2(9, 18)
+
+[node name="Enemy_1" type="Node2D" unique_id=1343753364]
+script = ExtResource("1_6708m")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1378677171]
+position = Vector2(10.580785, 18.25)
+scale = Vector2(0.03282345, 0.032381997)
+sprite_frames = SubResource("SpriteFrames_tw7yd")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.71536845
+
+[node name="Area2D" type="Area2D" parent="." unique_id=552161545]
+
+[node name="TopAnt" type="CollisionShape2D" parent="Area2D" unique_id=1935650103]
+position = Vector2(11, 8.625)
+shape = SubResource("RectangleShape2D_8cr6q")
+
+[node name="Area2D2" type="Area2D" parent="." unique_id=865603481]
+
+[node name="BottomAnt" type="CollisionShape2D" parent="Area2D2" unique_id=950979933]
+position = Vector2(10.5, 21)
+shape = SubResource("RectangleShape2D_intvb")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_2_body_entered"]

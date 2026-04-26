@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://genujcqjwfs2"]
+
+[ext_resource type="Script" uid="uid://bqscxn1eu338k" path="res://Scripts/paper.gd" id="1_j3gxa"]
+[ext_resource type="Texture2D" uid="uid://c8iqgc5mfsoo1" path="res://assets/Idle/Items/Papeles.png" id="2_j3gxa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjfxq"]
+radius = 8.0
+
+[node name="Paper" type="Area2D" unique_id=447073947]
+script = ExtResource("1_j3gxa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867580936]
+shape = SubResource("CircleShape2D_wjfxq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1887742015]
+position = Vector2(6.499991, 2.4999948)
+scale = Vector2(0.056770843, 0.064764)
+texture = ExtResource("2_j3gxa")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

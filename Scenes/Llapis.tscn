@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bt1t24j5sf87w"]
+
+[ext_resource type="Script" uid="uid://dpa1tpcrkasa3" path="res://llapis.gd" id="1_kib8i"]
+[ext_resource type="Texture2D" uid="uid://dtywys18hwsja" path="res://assets/Idle/Items/Llapis.png" id="2_kib8i"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjfxq"]
+radius = 8.0
+
+[node name="Llapis" type="Area2D" unique_id=447073947]
+script = ExtResource("1_kib8i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1867580936]
+shape = SubResource("CircleShape2D_wjfxq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1887742015]
+position = Vector2(15.999985, 7.9999924)
+scale = Vector2(0.06666667, 0.07903403)
+texture = ExtResource("2_kib8i")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
