@@ -1,5 +1,34 @@
 ~ start
+if GameManager.first_skill_unlocked and not GameManager.has_mission("investiga_hormiguero")
+	=> despues_curriculum
+
+if GameManager.has_mission("investiga_hormiguero") and not GameManager.is_mission_completed("investiga_hormiguero")
+	=> mision_hormiguero_activa
+
+if GameManager.is_mission_completed("investiga_hormiguero")
+	=> mision_hormiguero_completada
+
 Coronel Manel: Perfecto ahora solo te falta papel para poder crear tu primer curriculum.
 Marcos: Si es que soy el puto amo.
 Coronel Manel: Anda espavila chaval y ve hacia al lado contrario de la escuela y encontraras papel.
+=> END
+
+~ despues_curriculum
+Coronel Manel: Bien cadete, ya tienes tu primer CURRICULUM pulsa (E) para abrir el CURRICULUM.
+Coronel Manel: Ahora empieza lo importante.
+Coronel Manel: Tu siguiente MISION es investigar como salir del hormiguero.
+Marcos: Con lo bien que se esta en casa
+Coronel Manel: Como quieres encontrar trabajo sin salir de aqui. ¡Imbecil!
+do GameManager.start_mission("investiga_hormiguero")
+=> END
+
+~ mision_hormiguero_activa
+Coronel Manel: ¿Ya has investigado como salir del hormiguero?
+Marcos: Estoy en ello...
+Coronel Manel: Pues date prisa cadete.
+=> END
+
+~ mision_hormiguero_completada
+Coronel Manel: Bien hecho cadete.
+Coronel Manel: Has dado el primer paso para salir del hormiguero.
 => END

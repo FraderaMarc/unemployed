@@ -1,7 +1,28 @@
 ~ start
+if GameManager.first_skill_unlocked and not GameManager.has_mission("investiga_hormiguero")
+	=> despues_curriculum
+
+if GameManager.has_mission("investiga_hormiguero") and not GameManager.is_mission_completed("investiga_hormiguero")
+	=> mision_hormiguero_activa
+
 Coronel Manel: ¡¡CADETEE!!
 Coronel Manel: Ya es hora de empezar a trabajar.
 Coronel Manel: Tu primera MISION es encontrar papel y boli para crear tu primer curriculum.
 Marcos: Curriculum que mod de Minecraft es ese??
 Coronel Manel: Para conseguir un boli tendras que ir donde se adquieren todos los conocimientos basicos.
+=> END
+
+~ despues_curriculum
+Coronel Manel: Bien cadete, ya tienes tu primer curriculum desbloqueado.
+Coronel Manel: Ahora empieza lo importante.
+Coronel Manel: Tu siguiente MISION es investigar como salir del hormiguero.
+Marcos: ¿Del hormiguero? ¿Pero dónde me he metido?
+Coronel Manel: Espabila y busca pistas. Nadie va a salir por ti.
+do GameManager.start_mission("investiga_hormiguero")
+=> END
+
+~ mision_hormiguero_activa
+Coronel Manel: ¿Ya has investigado como salir del hormiguero?
+Marcos: Estoy en ello...
+Coronel Manel: Pues date prisa cadete.
 => END

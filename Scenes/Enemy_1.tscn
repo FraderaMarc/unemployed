@@ -43,12 +43,15 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8cr6q"]
-size = Vector2(10, 6.75)
+size = Vector2(9, 6.75)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_intvb"]
 size = Vector2(9, 18)
 
-[node name="Enemy_1" type="Node2D" unique_id=1343753364]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6708m"]
+size = Vector2(7, 24)
+
+[node name="Enemy_1" type="CharacterBody2D" unique_id=1596441519]
 script = ExtResource("1_6708m")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1378677171]
@@ -62,7 +65,7 @@ frame_progress = 0.71536845
 [node name="Area2D" type="Area2D" parent="." unique_id=552161545]
 
 [node name="TopAnt" type="CollisionShape2D" parent="Area2D" unique_id=1935650103]
-position = Vector2(11, 8.625)
+position = Vector2(10.5, 8.625)
 shape = SubResource("RectangleShape2D_8cr6q")
 
 [node name="Area2D2" type="Area2D" parent="." unique_id=865603481]
@@ -71,5 +74,6 @@ shape = SubResource("RectangleShape2D_8cr6q")
 position = Vector2(10.5, 21)
 shape = SubResource("RectangleShape2D_intvb")
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_2_body_entered"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=267974451]
+position = Vector2(10.5, 18)
+shape = SubResource("RectangleShape2D_6708m")
