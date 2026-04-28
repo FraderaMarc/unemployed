@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 const JUMP_VELOCITY: float = -325.0
+const ENEMY_BOUNCE_VELOCITY: float = -240.0
+const ENEMY_DAMAGE_COOLDOWN: float = 1.0
 const CURRICULUM_SCENE: PackedScene = preload("res://Scenes/curriculum.tscn")
 
 @onready var anim: AnimatedSprite2D = $Sprite2D
@@ -8,9 +10,13 @@ const CURRICULUM_SCENE: PackedScene = preload("res://Scenes/curriculum.tscn")
 
 var coins: int = 0
 var can_move: bool = true
+var can_receive_enemy_damage: bool = true
+var is_restarting: bool = false
 var curriculum: Control = null
 
 func _ready() -> void:
+	add_to_group("player")
+
 	curriculum = CURRICULUM_SCENE.instantiate()
 	hud.add_child(curriculum)
 	curriculum.hide()
@@ -33,6 +39,9 @@ func _on_skill_tree_unlocked() -> void:
 		curriculum.open_skill_tree_from_items()
 
 func _physics_process(delta: float) -> void:
+	if is_restarting:
+		return
+
 	if Input.is_action_just_pressed("open_curriculum"):
 		if not GameManager.first_skill_unlocked:
 			return
@@ -74,7 +83,11 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, GameManager.velocidad_base)
 
+	var was_falling: bool = velocity.y > 0.0
+
 	move_and_slide()
+
+	_check_enemy_collisions(was_falling)
 
 	if not is_on_floor() and velocity.y < 0.0:
 		anim.play("Jump")
@@ -83,17 +96,117 @@ func _physics_process(delta: float) -> void:
 	else:
 		anim.play("Idle")
 
+func _check_enemy_collisions(was_falling: bool) -> void:
+	for i in get_slide_collision_count():
+		var collision: KinematicCollision2D = get_slide_collision(i)
+
+		if collision == null:
+			continue
+
+		var collider: Object = collision.get_collider()
+
+		if not collider is Node:
+			continue
+
+		var enemy: Node = collider as Node
+
+		if not _is_enemy(enemy):
+			continue
+
+		var normal: Vector2 = collision.get_normal()
+
+		# Si caigo encima del enemigo, le hago daño y reboto.
+		if was_falling and normal.y < -0.5:
+			_damage_enemy_from_stomp(enemy)
+			bounce_from_enemy()
+			return
+
+		# Si lo toco lateralmente, el enemigo me hace daño.
+		_receive_lateral_enemy_damage(enemy)
+
+func _is_enemy(node: Node) -> bool:
+	if node.is_in_group("enemy"):
+		return true
+
+	if node.has_method("receive_stomp_damage"):
+		return true
+
+	if node.has_method("get_enemy_damage"):
+		return true
+
+	return false
+
+func _damage_enemy_from_stomp(enemy: Node) -> void:
+	var damage: float = attack_damage()
+
+	if enemy.has_method("receive_stomp_damage"):
+		enemy.receive_stomp_damage(damage)
+		return
+
+	if enemy.has_method("receive_damage"):
+		enemy.receive_damage(damage)
+
+func _receive_lateral_enemy_damage(enemy: Node) -> void:
+	if not can_receive_enemy_damage:
+		return
+
+	var damage: float = 10.0
+
+	if enemy.has_method("get_enemy_damage"):
+		damage = enemy.get_enemy_damage()
+
+	receive_damage(damage)
+
+	can_receive_enemy_damage = false
+	await get_tree().create_timer(ENEMY_DAMAGE_COOLDOWN).timeout
+	can_receive_enemy_damage = true
+
 func receive_damage(amount: float) -> void:
+	if is_restarting:
+		return
+
 	GameManager.take_damage(amount)
 
 func attack_damage() -> float:
 	return GameManager.get_attack_damage()
 
+func bounce_from_enemy() -> void:
+	velocity.y = ENEMY_BOUNCE_VELOCITY
+
 func _on_player_died() -> void:
+	if is_restarting:
+		return
+
+	is_restarting = true
 	can_move = false
 	velocity = Vector2.ZERO
 	anim.play("Idle")
-	print("El jugador ha muerto")
+
+	await _show_death_screen_and_restart()
+
+func _show_death_screen_and_restart() -> void:
+	var black_screen: ColorRect = ColorRect.new()
+	black_screen.name = "DeathBlackScreen"
+	black_screen.color = Color(0, 0, 0, 0)
+	black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	black_screen.z_index = 9999
+
+	hud.add_child(black_screen)
+
+	black_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
+	black_screen.offset_left = 0
+	black_screen.offset_top = 0
+	black_screen.offset_right = 0
+	black_screen.offset_bottom = 0
+
+	var tween: Tween = create_tween()
+	tween.tween_property(black_screen, "color", Color(0, 0, 0, 1), 0.6)
+
+	await tween.finished
+	await get_tree().create_timer(0.6).timeout
+
+	GameManager.reset_player_stats()
+	get_tree().reload_current_scene()
 
 func _is_any_menu_open() -> bool:
 	if curriculum != null and curriculum.visible:

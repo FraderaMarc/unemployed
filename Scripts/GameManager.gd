@@ -18,7 +18,7 @@ const MISSIONS: Dictionary = {
 	}
 }
 
-var skillcoins: int = 0
+var skillcoins: int = 1
 var llapis: bool = false
 var paper: bool = false
 var skill_tree_opened_once: bool = false
@@ -30,18 +30,21 @@ var missions: Array = []
 # ATRIBUTOS DEL PERSONAJE
 # -------------------------
 
-var vida_maxima: float = 100.0
-var vida: float = 100.0
+var vida_maxima: float = 50.0
+var vida: float = 50.0
 
 var velocidad_base: float = 225.0
 var velocidad_sprint: float = 320.0
 
-var resistencia_maxima: float = 100.0
-var resistencia: float = 100.0
+# De momento empieza en 0.
+# Funciona como defensa:
+# daño final = daño recibido - resistencia
+var resistencia_maxima: float = 0.0
+var resistencia: float = 0.0
 var resistencia_gasto_por_segundo: float = 25.0
 var resistencia_recuperacion_por_segundo: float = 18.0
 
-var fuerza: float = 10.0
+var fuerza: float = 5.0
 
 # -------------------------
 # SKILLCOINS / OBJETOS
@@ -79,7 +82,7 @@ func unlock_first_skill() -> void:
 	first_skill_unlocked = true
 
 # -------------------------
-# ATRIBUTOS
+# ATRIBUTOS / COMBATE
 # -------------------------
 
 func get_player_speed(is_sprinting: bool = false) -> float:
@@ -105,7 +108,13 @@ func take_damage(amount: float) -> void:
 	if amount <= 0.0:
 		return
 
-	vida -= amount
+	var final_damage: float = amount - resistencia
+	final_damage = maxf(final_damage, 0.0)
+
+	if final_damage <= 0.0:
+		return
+
+	vida -= final_damage
 	vida = clampf(vida, 0.0, vida_maxima)
 
 	player_stats_changed.emit()
