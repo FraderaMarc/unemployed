@@ -3,7 +3,11 @@
 [ext_resource type="Script" uid="uid://dgon2ko3274oj" path="res://Scripts/skill_tree.gd" id="1_b5c3k"]
 [ext_resource type="PackedScene" uid="uid://drbmtj8wtf8fs" path="res://Scenes/skill_button.tscn" id="1_wp0ut"]
 [ext_resource type="Script" uid="uid://by0xk6llubgim" path="res://Scenes/label.gd" id="2_2gqrc"]
+[ext_resource type="PackedScene" uid="uid://bnsknp73hyeo3" path="res://Scenes/Skill_button_3.tscn" id="3_2v864"]
+[ext_resource type="Texture2D" uid="uid://bo7ire4qhjcc" path="res://assets/Idle/PixelArts/Daño.png" id="3_7mv6q"]
+[ext_resource type="Texture2D" uid="uid://doxlxw7vdp4it" path="res://assets/Idle/PixelArts/Vida.png" id="3_kvjh1"]
 [ext_resource type="Texture2D" uid="uid://ob5w3fasabyp" path="res://assets/Idle/Items/SkillPoints.png" id="4_qierj"]
+[ext_resource type="Texture2D" uid="uid://b7gqt1vr8ln2p" path="res://assets/Idle/PixelArts/Escudo.png" id="4_y7ohu"]
 
 [node name="SkillTree" type="Control" unique_id=1473896803]
 layout_mode = 3
@@ -28,10 +32,10 @@ grow_vertical = 2
 
 [node name="Skill1" parent="." unique_id=1360710555 groups=["skill_buttons"] instance=ExtResource("1_wp0ut")]
 layout_mode = 0
-offset_left = 520.0
-offset_top = 552.0
-offset_right = 560.0
-offset_bottom = 592.0
+offset_left = 537.0
+offset_top = 546.0
+offset_right = 577.0
+offset_bottom = 586.0
 
 [node name="Skill2" parent="Skill1" unique_id=811953792 groups=["skill_buttons"] instance=ExtResource("1_wp0ut")]
 layout_mode = 0
@@ -40,22 +44,23 @@ offset_top = -91.0
 offset_right = 132.0
 offset_bottom = -51.0
 disabled = true
+texture_normal = ExtResource("3_kvjh1")
 
-[node name="Skill3" parent="Skill1/Skill2" unique_id=1146171155 groups=["skill_buttons"] instance=ExtResource("1_wp0ut")]
+[node name="Skill3" parent="Skill1/Skill2" unique_id=1831262429 instance=ExtResource("3_2v864")]
 layout_mode = 0
-offset_left = -24.0
-offset_top = -112.0
-offset_right = 16.0
-offset_bottom = -72.0
-disabled = true
+offset_left = 50.0
+offset_top = -127.0
+offset_right = 90.0
+offset_bottom = -87.0
+texture_normal = ExtResource("4_y7ohu")
 
-[node name="Skill2_A" parent="Skill1" unique_id=839624853 groups=["skill_buttons"] instance=ExtResource("1_wp0ut")]
+[node name="Skill2_A" parent="Skill1" unique_id=440869825 instance=ExtResource("3_2v864")]
 layout_mode = 0
-offset_left = -84.0
-offset_top = -83.0
-offset_right = -44.0
-offset_bottom = -43.0
-disabled = true
+offset_left = -127.0
+offset_top = -109.0
+offset_right = -87.0
+offset_bottom = -69.0
+texture_normal = ExtResource("3_7mv6q")
 
 [node name="Label" type="Label" parent="." unique_id=1419565406]
 layout_mode = 0

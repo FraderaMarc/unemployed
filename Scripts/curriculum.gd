@@ -323,7 +323,7 @@ func _refresh_stats_display() -> void:
 
 	var vida_text: String = _format_stat_value(GameManager.vida)
 	var velocidad_text: String = _format_stat_value(GameManager.velocidad_base / 100.0)
-	var resistencia_text: String = _format_stat_value(GameManager.resistencia)
+	var resistencia_text: String = _format_stat_value(GameManager.resistencia_maxima)
 	var fuerza_text: String = _format_stat_value(GameManager.fuerza)
 
 	_add_stat_row(ICON_VIDA_PATH, "❤️", "Vida", vida_text)

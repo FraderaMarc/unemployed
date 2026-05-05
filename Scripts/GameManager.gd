@@ -36,10 +36,11 @@ var vida: float = 50.0
 var velocidad_base: float = 225.0
 var velocidad_sprint: float = 320.0
 
-# De momento empieza en 0.
-# Funciona como defensa:
-# daño final = daño recibido - resistencia
+# Resistencia máxima funciona como "escudo":
+# daño final = daño recibido - resistencia_maxima
 var resistencia_maxima: float = 0.0
+
+# Resistencia actual se sigue usando para el sprint/stamina.
 var resistencia: float = 0.0
 var resistencia_gasto_por_segundo: float = 25.0
 var resistencia_recuperacion_por_segundo: float = 18.0
@@ -108,7 +109,7 @@ func take_damage(amount: float) -> void:
 	if amount <= 0.0:
 		return
 
-	var final_damage: float = amount - resistencia
+	var final_damage: float = amount - resistencia_maxima
 	final_damage = maxf(final_damage, 0.0)
 
 	if final_damage <= 0.0:
@@ -142,6 +143,32 @@ func restore_stamina(amount: float) -> void:
 
 func get_attack_damage() -> float:
 	return fuerza
+
+func increase_attack_damage(amount: float) -> void:
+	if amount <= 0.0:
+		return
+
+	fuerza += amount
+	player_stats_changed.emit()
+
+func increase_max_health(amount: float) -> void:
+	if amount <= 0.0:
+		return
+
+	vida_maxima += amount
+	vida += amount
+	vida = clampf(vida, 0.0, vida_maxima)
+
+	player_stats_changed.emit()
+
+func increase_max_resistance(amount: float) -> void:
+	if amount <= 0.0:
+		return
+
+	resistencia_maxima += amount
+	resistencia = resistencia_maxima
+
+	player_stats_changed.emit()
 
 func reset_player_stats() -> void:
 	vida = vida_maxima

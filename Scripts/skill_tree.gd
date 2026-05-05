@@ -2,14 +2,19 @@ extends Control
 
 const FIRST_SKILL_NAME := "Skill1"
 
+const SKILL2_HEALTH_INCREASE: float = 15.0
+const SKILL2_A_DAMAGE_INCREASE: float = 3.0
+const SKILL3_RESISTANCE_INCREASE: float = 3.0
+
 var curriculum: Control = null
 
 var skill_levels: Dictionary = {}
+
 var skill_max_levels: Dictionary = {
 	"Skill1": 1,
 	"Skill2": 1,
-	"Skill2_A": 1,
-	"Skill3": 1
+	"Skill2_A": 3,
+	"Skill3": 3
 }
 
 func _ready() -> void:
@@ -24,13 +29,17 @@ func _ready() -> void:
 		if not button.pressed.is_connected(_on_skill_button_pressed):
 			button.pressed.connect(_on_skill_button_pressed.bind(button))
 
-	GameManager.skillcoins_changed.connect(_on_skillcoins_changed)
+	if not GameManager.skillcoins_changed.is_connected(_on_skillcoins_changed):
+		GameManager.skillcoins_changed.connect(_on_skillcoins_changed)
+
 	_refresh_buttons()
 
 func _process(_delta: float) -> void:
 	if visible and Input.is_action_just_pressed("ui_cancel"):
 		hide()
-		curriculum.show()
+
+		if curriculum != null:
+			curriculum.show()
 
 func _on_skill_button_pressed(button: BaseButton) -> void:
 	if not _can_upgrade(button):
@@ -44,10 +53,23 @@ func _on_skill_button_pressed(button: BaseButton) -> void:
 	var skill_id: NodePath = _get_skill_id(button)
 	skill_levels[skill_id] = skill_levels.get(skill_id, 0) + 1
 
+	_apply_skill_effect(button.name)
+
 	if button.name == FIRST_SKILL_NAME and skill_levels[skill_id] >= 1:
-		GameManager.first_skill_unlocked = true
+		GameManager.unlock_first_skill()
 
 	_refresh_buttons()
+
+func _apply_skill_effect(skill_name: String) -> void:
+	match skill_name:
+		"Skill2":
+			GameManager.increase_max_health(SKILL2_HEALTH_INCREASE)
+
+		"Skill2_A":
+			GameManager.increase_attack_damage(SKILL2_A_DAMAGE_INCREASE)
+
+		"Skill3":
+			GameManager.increase_max_resistance(SKILL3_RESISTANCE_INCREASE)
 
 func _on_skillcoins_changed(_total: int) -> void:
 	_refresh_buttons()
@@ -61,6 +83,7 @@ func _collect_skill_buttons(node: Node, result: Array) -> void:
 	for child in node.get_children():
 		if child is BaseButton:
 			result.append(child)
+
 		_collect_skill_buttons(child, result)
 
 func _get_skill_id(button: BaseButton) -> NodePath:
@@ -101,6 +124,8 @@ func _refresh_buttons() -> void:
 
 		button.disabled = not _can_upgrade(button)
 
-		if button is Button:
-			var text_button: Button = button as Button
-			text_button.text = "%s %d/%d" % [button.name, current_level, max_level]
+		if button.has_method("set_level_text"):
+			button.set_level_text(current_level, max_level)
+
+		if button.has_method("set_unlocked_visual"):
+			button.set_unlocked_visual(current_level > 0)
