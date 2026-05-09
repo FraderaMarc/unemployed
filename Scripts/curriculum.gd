@@ -23,6 +23,7 @@ var mission_popup_label: Label = null
 var stats_panel: Panel = null
 var stats_container: VBoxContainer = null
 
+
 func _ready() -> void:
 	hide()
 
@@ -45,12 +46,14 @@ func _ready() -> void:
 	_refresh_missions_ui()
 	_refresh_stats_display()
 
+
 func _process(_delta: float) -> void:
 	if visible and Input.is_action_just_pressed("ui_cancel"):
 		if missions_panel != null and missions_panel.visible:
 			missions_panel.hide()
 		else:
 			hide()
+
 
 # -------------------------
 # SKILL TREE
@@ -63,15 +66,18 @@ func _ensure_skill_tree() -> void:
 		skill_tree.curriculum = self
 		skill_tree.name = "skill_tree"
 
+
 func _on_skill_tree_pressed() -> void:
 	_ensure_skill_tree()
 	hide()
 	skill_tree.show()
 
+
 func open_skill_tree_from_items() -> void:
 	_ensure_skill_tree()
 	hide()
 	skill_tree.show()
+
 
 # -------------------------
 # BOTÓN DE MISIONES
@@ -82,6 +88,7 @@ func _on_missiones_pressed() -> void:
 	missions_panel.visible = not missions_panel.visible
 	missions_button.button_pressed = false
 	_refresh_missions_ui()
+
 
 func _create_mission_button_label() -> void:
 	mission_button_label = Label.new()
@@ -106,7 +113,11 @@ func _create_mission_button_label() -> void:
 	mission_button_label.offset_right = -8
 	mission_button_label.offset_bottom = -8
 
+
 func _create_mission_popup() -> void:
+	if mission_popup != null:
+		return
+
 	mission_popup = Panel.new()
 	mission_popup.name = "MissionPopup"
 	mission_popup.visible = false
@@ -123,8 +134,6 @@ func _create_mission_popup() -> void:
 	style.content_margin_right = 14
 	style.content_margin_bottom = 10
 	mission_popup.add_theme_stylebox_override("panel", style)
-
-	get_parent().add_child(mission_popup)
 
 	mission_popup.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	mission_popup.offset_left = -380
@@ -155,10 +164,30 @@ func _create_mission_popup() -> void:
 	popup_container.add_child(mission_popup_label)
 
 	mission_popup_timer = Timer.new()
+	mission_popup_timer.name = "MissionPopupTimer"
 	mission_popup_timer.one_shot = true
 	mission_popup_timer.wait_time = 3.0
-	mission_popup_timer.timeout.connect(_hide_mission_popup)
-	add_child(mission_popup_timer)
+
+	if not mission_popup_timer.timeout.is_connected(_hide_mission_popup):
+		mission_popup_timer.timeout.connect(_hide_mission_popup)
+
+	call_deferred("_add_mission_popup_to_scene")
+
+
+func _add_mission_popup_to_scene() -> void:
+	if mission_popup == null:
+		return
+
+	var parent_node: Node = get_parent()
+
+	if parent_node != null and mission_popup.get_parent() == null:
+		parent_node.add_child(mission_popup)
+	elif mission_popup.get_parent() == null:
+		add_child(mission_popup)
+
+	if mission_popup_timer != null and mission_popup_timer.get_parent() == null:
+		add_child(mission_popup_timer)
+
 
 func _ensure_missions_panel() -> void:
 	if missions_panel != null:
@@ -196,21 +225,44 @@ func _ensure_missions_panel() -> void:
 	missions_container.add_theme_constant_override("separation", 8)
 	missions_panel.add_child(missions_container)
 
+
 func _on_mission_started(mission: Dictionary) -> void:
 	var title: String = mission.get("title", "")
 
 	if title == "":
 		return
 
+	if mission_popup == null or mission_popup_label == null:
+		_create_mission_popup()
+
 	mission_popup_label.text = title
+
+	if mission_popup.get_parent() == null:
+		call_deferred("_add_mission_popup_to_scene")
+
 	mission_popup.show()
-	mission_popup_timer.start()
+
+	if mission_popup_timer != null:
+		if mission_popup_timer.get_parent() == null:
+			call_deferred("_start_mission_popup_timer")
+		else:
+			mission_popup_timer.start()
 
 	_refresh_missions_ui()
+
+
+func _start_mission_popup_timer() -> void:
+	if mission_popup_timer != null:
+		if mission_popup_timer.get_parent() == null:
+			add_child(mission_popup_timer)
+
+		mission_popup_timer.start()
+
 
 func _hide_mission_popup() -> void:
 	if mission_popup != null:
 		mission_popup.hide()
+
 
 func _refresh_missions_ui() -> void:
 	_refresh_mission_button_text()
@@ -242,6 +294,7 @@ func _refresh_missions_ui() -> void:
 	for mission in completed_missions:
 		_add_mission_label(mission, true)
 
+
 func _refresh_mission_button_text() -> void:
 	if mission_button_label == null:
 		return
@@ -252,6 +305,7 @@ func _refresh_mission_button_text() -> void:
 		mission_button_label.text = "Misiones"
 	else:
 		mission_button_label.text = current_mission_title
+
 
 func _add_mission_label(mission: Dictionary, completed: bool) -> void:
 	var label: Label = Label.new()
@@ -268,6 +322,7 @@ func _add_mission_label(mission: Dictionary, completed: bool) -> void:
 	label.add_theme_font_size_override("font_size", 15)
 
 	missions_container.add_child(label)
+
 
 # -------------------------
 # PANEL DE STATS
@@ -314,6 +369,7 @@ func _create_stats_display() -> void:
 
 	_refresh_stats_display()
 
+
 func _refresh_stats_display() -> void:
 	if stats_container == null:
 		return
@@ -330,6 +386,7 @@ func _refresh_stats_display() -> void:
 	_add_stat_row(ICON_VELOCIDAD_PATH, "⚡", "Velocidad", velocidad_text)
 	_add_stat_row(ICON_RESISTENCIA_PATH, "🛡", "Resistencia", resistencia_text)
 	_add_stat_row(ICON_FUERZA_PATH, "💪", "Fuerza", fuerza_text)
+
 
 func _add_stat_row(icon_path: String, fallback_icon: String, tooltip: String, value_text: String) -> void:
 	var row: HBoxContainer = HBoxContainer.new()
@@ -365,6 +422,7 @@ func _add_stat_row(icon_path: String, fallback_icon: String, tooltip: String, va
 	value_label.add_theme_color_override("font_color", Color.BLACK)
 	value_label.add_theme_font_size_override("font_size", 16)
 	row.add_child(value_label)
+
 
 func _format_stat_value(value: float) -> String:
 	if is_equal_approx(value, roundf(value)):

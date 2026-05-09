@@ -8,8 +8,6 @@ const SKILL3_RESISTANCE_INCREASE: float = 3.0
 
 var curriculum: Control = null
 
-var skill_levels: Dictionary = {}
-
 var skill_max_levels: Dictionary = {
 	"Skill1": 1,
 	"Skill2": 1,
@@ -17,14 +15,15 @@ var skill_max_levels: Dictionary = {
 	"Skill3": 3
 }
 
+
 func _ready() -> void:
 	hide()
 
 	for button in _get_all_skill_buttons():
-		var skill_id: NodePath = _get_skill_id(button)
+		var skill_id: String = _get_skill_id(button)
 
-		if not skill_levels.has(skill_id):
-			skill_levels[skill_id] = 0
+		if not GameManager.skill_levels.has(skill_id):
+			GameManager.skill_levels[skill_id] = 0
 
 		if not button.pressed.is_connected(_on_skill_button_pressed):
 			button.pressed.connect(_on_skill_button_pressed.bind(button))
@@ -34,12 +33,14 @@ func _ready() -> void:
 
 	_refresh_buttons()
 
+
 func _process(_delta: float) -> void:
 	if visible and Input.is_action_just_pressed("ui_cancel"):
 		hide()
 
 		if curriculum != null:
 			curriculum.show()
+
 
 func _on_skill_button_pressed(button: BaseButton) -> void:
 	if not _can_upgrade(button):
@@ -50,15 +51,16 @@ func _on_skill_button_pressed(button: BaseButton) -> void:
 		_refresh_buttons()
 		return
 
-	var skill_id: NodePath = _get_skill_id(button)
-	skill_levels[skill_id] = skill_levels.get(skill_id, 0) + 1
+	var skill_id: String = _get_skill_id(button)
+	GameManager.skill_levels[skill_id] = int(GameManager.skill_levels.get(skill_id, 0)) + 1
 
 	_apply_skill_effect(button.name)
 
-	if button.name == FIRST_SKILL_NAME and skill_levels[skill_id] >= 1:
+	if button.name == FIRST_SKILL_NAME and int(GameManager.skill_levels.get(skill_id, 0)) >= 1:
 		GameManager.unlock_first_skill()
 
 	_refresh_buttons()
+
 
 func _apply_skill_effect(skill_name: String) -> void:
 	match skill_name:
@@ -71,13 +73,16 @@ func _apply_skill_effect(skill_name: String) -> void:
 		"Skill3":
 			GameManager.increase_max_resistance(SKILL3_RESISTANCE_INCREASE)
 
+
 func _on_skillcoins_changed(_total: int) -> void:
 	_refresh_buttons()
+
 
 func _get_all_skill_buttons() -> Array:
 	var result: Array = []
 	_collect_skill_buttons(self, result)
 	return result
+
 
 func _collect_skill_buttons(node: Node, result: Array) -> void:
 	for child in node.get_children():
@@ -86,16 +91,18 @@ func _collect_skill_buttons(node: Node, result: Array) -> void:
 
 		_collect_skill_buttons(child, result)
 
-func _get_skill_id(button: BaseButton) -> NodePath:
-	return get_path_to(button)
+
+func _get_skill_id(button: BaseButton) -> String:
+	return str(get_path_to(button))
+
 
 func _can_upgrade(button: BaseButton) -> bool:
 	if GameManager.skillcoins <= 0:
 		return false
 
-	var skill_id: NodePath = _get_skill_id(button)
-	var current_level: int = skill_levels.get(skill_id, 0)
-	var max_level: int = skill_max_levels.get(button.name, 1)
+	var skill_id: String = _get_skill_id(button)
+	var current_level: int = int(GameManager.skill_levels.get(skill_id, 0))
+	var max_level: int = int(skill_max_levels.get(button.name, 1))
 
 	if current_level >= max_level:
 		return false
@@ -105,6 +112,7 @@ func _can_upgrade(button: BaseButton) -> bool:
 
 	return true
 
+
 func _parent_requirement_met(button: BaseButton) -> bool:
 	var parent_node: Node = button.get_parent()
 
@@ -112,15 +120,16 @@ func _parent_requirement_met(button: BaseButton) -> bool:
 		return true
 
 	var parent_button: BaseButton = parent_node as BaseButton
-	var parent_id: NodePath = _get_skill_id(parent_button)
+	var parent_id: String = _get_skill_id(parent_button)
 
-	return skill_levels.get(parent_id, 0) >= 1
+	return int(GameManager.skill_levels.get(parent_id, 0)) >= 1
+
 
 func _refresh_buttons() -> void:
 	for button in _get_all_skill_buttons():
-		var skill_id: NodePath = _get_skill_id(button)
-		var current_level: int = skill_levels.get(skill_id, 0)
-		var max_level: int = skill_max_levels.get(button.name, 1)
+		var skill_id: String = _get_skill_id(button)
+		var current_level: int = int(GameManager.skill_levels.get(skill_id, 0))
+		var max_level: int = int(skill_max_levels.get(button.name, 1))
 
 		button.disabled = not _can_upgrade(button)
 

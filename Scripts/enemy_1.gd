@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@export var enemy_id: String = ""
+
 @export var speed: float = 80.0
 @export var direction: int = -1
 
@@ -21,11 +23,18 @@ var can_damage: bool = true
 var can_receive_stomp: bool = true
 var is_dead: bool = false
 
+
 func _ready() -> void:
+	# Si ya tienes el lápiz, este enemigo ya no hace falta que aparezca.
+	if GameManager.llapis:
+		queue_free()
+		return
+
 	add_to_group("enemy")
 	vida = vida_maxima
 	_connect_damage_area()
 	_update_sprite_direction()
+
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -45,6 +54,7 @@ func _physics_process(delta: float) -> void:
 
 	_check_damage_area_contacts()
 
+
 func _connect_damage_area() -> void:
 	if damage_area == null:
 		push_warning(name + " no tiene un nodo hijo llamado DamageArea.")
@@ -59,6 +69,7 @@ func _connect_damage_area() -> void:
 	if not damage_area.area_entered.is_connected(_on_damage_area_area_entered):
 		damage_area.area_entered.connect(_on_damage_area_area_entered)
 
+
 func _check_damage_area_contacts() -> void:
 	if damage_area == null:
 		return
@@ -69,11 +80,14 @@ func _check_damage_area_contacts() -> void:
 	for area in damage_area.get_overlapping_areas():
 		_handle_player_contact(area)
 
+
 func _on_damage_area_body_entered(body: Node) -> void:
 	_handle_player_contact(body)
 
+
 func _on_damage_area_area_entered(area: Area2D) -> void:
 	_handle_player_contact(area)
+
 
 func _handle_player_contact(collider: Node) -> void:
 	if is_dead:
@@ -89,6 +103,7 @@ func _handle_player_contact(collider: Node) -> void:
 
 	_damage_player(player)
 
+
 func _get_player_from_collider(collider: Node) -> CharacterBody2D:
 	var current: Node = collider
 
@@ -101,11 +116,13 @@ func _get_player_from_collider(collider: Node) -> CharacterBody2D:
 
 	return null
 
+
 func _is_player_stomping(player: CharacterBody2D) -> bool:
 	if player.velocity.y <= 0.0:
 		return false
 
 	return player.global_position.y < global_position.y - 4.0
+
 
 func _damage_player(player: CharacterBody2D) -> void:
 	if not can_damage:
@@ -120,8 +137,10 @@ func _damage_player(player: CharacterBody2D) -> void:
 	await get_tree().create_timer(damage_cooldown).timeout
 	can_damage = true
 
+
 func get_enemy_damage() -> float:
 	return damage
+
 
 func receive_stomp_damage(amount: float) -> void:
 	if is_dead:
@@ -139,6 +158,7 @@ func receive_stomp_damage(amount: float) -> void:
 	await get_tree().create_timer(stomp_cooldown).timeout
 	can_receive_stomp = true
 
+
 func receive_damage(amount: float) -> void:
 	if is_dead:
 		return
@@ -151,6 +171,7 @@ func receive_damage(amount: float) -> void:
 	if vida <= 0.0:
 		die()
 
+
 func die() -> void:
 	if is_dead:
 		return
@@ -162,6 +183,7 @@ func die() -> void:
 
 	queue_free()
 
+
 func _drop_llapis() -> void:
 	var scene: PackedScene = _get_llapis_scene()
 
@@ -170,11 +192,17 @@ func _drop_llapis() -> void:
 		return
 
 	var drop: Node = scene.instantiate()
-	get_parent().add_child(drop)
+	var parent_node: Node = get_parent()
+
+	if parent_node == null:
+		return
+
+	parent_node.add_child(drop)
 
 	if drop is Node2D:
 		var drop_node: Node2D = drop as Node2D
 		drop_node.global_position = global_position + drop_offset
+
 
 func _get_llapis_scene() -> PackedScene:
 	if llapis_scene != null:
@@ -185,9 +213,11 @@ func _get_llapis_scene() -> PackedScene:
 
 	return null
 
+
 func _turn_around() -> void:
 	direction *= -1
 	_update_sprite_direction()
+
 
 func _update_sprite_direction() -> void:
 	var sprite: Sprite2D = get_node_or_null("Sprite2D") as Sprite2D
@@ -199,3 +229,17 @@ func _update_sprite_direction() -> void:
 
 	if animated_sprite != null:
 		animated_sprite.flip_h = direction > 0
+
+
+func _get_enemy_id() -> String:
+	var clean_enemy_id: String = enemy_id.strip_edges()
+
+	if clean_enemy_id != "":
+		return clean_enemy_id
+
+	var scene_path: String = ""
+
+	if get_tree().current_scene != null:
+		scene_path = get_tree().current_scene.scene_file_path
+
+	return scene_path + "::" + str(get_path())

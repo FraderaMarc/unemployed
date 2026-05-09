@@ -1,14 +1,12 @@
 extends Area2D
 
-@export var pickup_delay: float = 0.2
+@export var pickup_delay: float = 0.6
 
 var can_pickup: bool = false
 var already_picked: bool = false
 
-
 func _ready() -> void:
 	monitoring = true
-	monitorable = true
 
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
@@ -20,7 +18,6 @@ func _ready() -> void:
 	can_pickup = true
 	_check_overlapping_bodies()
 
-
 func _on_body_entered(body: Node) -> void:
 	if already_picked:
 		return
@@ -30,14 +27,12 @@ func _on_body_entered(body: Node) -> void:
 
 	_try_pickup(body)
 
-
 func _check_overlapping_bodies() -> void:
 	if already_picked:
 		return
 
 	for body in get_overlapping_bodies():
 		_try_pickup(body)
-
 
 func _try_pickup(body: Node) -> void:
 	if already_picked:
@@ -47,29 +42,14 @@ func _try_pickup(body: Node) -> void:
 		return
 
 	already_picked = true
-
 	GameManager.obtain_llapis()
-
-	if SaveManager != null:
-		SaveManager.save_current_game()
-
 	queue_free()
 
-
 func _is_player(body: Node) -> bool:
-	if body == null:
-		return false
-
 	if body.is_in_group("player"):
 		return true
 
-	if body.is_in_group("Player"):
-		return true
-
 	if body.has_method("add_coin"):
-		return true
-
-	if body.has_method("receive_damage"):
 		return true
 
 	if str(body.name).to_lower().contains("player"):

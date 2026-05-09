@@ -6,7 +6,7 @@ const ENEMY_DAMAGE_COOLDOWN: float = 1.0
 const CURRICULUM_SCENE: PackedScene = preload("res://Scenes/curriculum.tscn")
 
 @onready var anim: AnimatedSprite2D = $Sprite2D
-@onready var hud: CanvasLayer = get_node("/root/Map/CanvasLayer")
+@onready var hud: Node = get_node_or_null("/root/Map/CanvasLayer")
 
 var coins: int = 0
 var can_move: bool = true
@@ -14,12 +14,19 @@ var can_receive_enemy_damage: bool = true
 var is_restarting: bool = false
 var curriculum: Control = null
 
+
 func _ready() -> void:
 	add_to_group("player")
 
-	curriculum = CURRICULUM_SCENE.instantiate()
-	hud.add_child(curriculum)
-	curriculum.hide()
+	GameManager.set_initial_respawn_position(global_position)
+	global_position = GameManager.get_respawn_position(global_position)
+
+	if hud != null:
+		curriculum = CURRICULUM_SCENE.instantiate()
+		hud.add_child(curriculum)
+		curriculum.hide()
+	else:
+		push_warning("No se ha encontrado /root/Map/CanvasLayer. No se puede añadir el curriculum al HUD.")
 
 	if not GameManager.skill_tree_unlocked.is_connected(_on_skill_tree_unlocked):
 		GameManager.skill_tree_unlocked.connect(_on_skill_tree_unlocked)
@@ -30,13 +37,18 @@ func _ready() -> void:
 	if GameManager.has_both_items() and GameManager.skill_tree_opened_once:
 		_on_skill_tree_unlocked()
 
+
 func add_coin(amount: int = 1) -> void:
 	coins += amount
-	hud.set_coins(coins)
+
+	if hud != null and hud.has_method("set_coins"):
+		hud.set_coins(coins)
+
 
 func _on_skill_tree_unlocked() -> void:
-	if curriculum != null:
+	if curriculum != null and curriculum.has_method("open_skill_tree_from_items"):
 		curriculum.open_skill_tree_from_items()
+
 
 func _physics_process(delta: float) -> void:
 	if is_restarting:
@@ -47,10 +59,11 @@ func _physics_process(delta: float) -> void:
 			return
 
 		if not _is_skill_tree_open():
-			if curriculum.visible:
-				curriculum.hide()
-			else:
-				curriculum.show()
+			if curriculum != null:
+				if curriculum.visible:
+					curriculum.hide()
+				else:
+					curriculum.show()
 
 	if not can_move or _is_any_menu_open():
 		velocity = Vector2.ZERO
@@ -96,6 +109,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		anim.play("Idle")
 
+
 func _check_enemy_collisions(was_falling: bool) -> void:
 	for i in get_slide_collision_count():
 		var collision: KinematicCollision2D = get_slide_collision(i)
@@ -115,14 +129,13 @@ func _check_enemy_collisions(was_falling: bool) -> void:
 
 		var normal: Vector2 = collision.get_normal()
 
-		# Si caigo encima del enemigo, le hago daño y reboto.
 		if was_falling and normal.y < -0.5:
 			_damage_enemy_from_stomp(enemy)
 			bounce_from_enemy()
 			return
 
-		# Si lo toco lateralmente, el enemigo me hace daño.
 		_receive_lateral_enemy_damage(enemy)
+
 
 func _is_enemy(node: Node) -> bool:
 	if node.is_in_group("enemy"):
@@ -136,6 +149,7 @@ func _is_enemy(node: Node) -> bool:
 
 	return false
 
+
 func _damage_enemy_from_stomp(enemy: Node) -> void:
 	var damage: float = attack_damage()
 
@@ -145,6 +159,7 @@ func _damage_enemy_from_stomp(enemy: Node) -> void:
 
 	if enemy.has_method("receive_damage"):
 		enemy.receive_damage(damage)
+
 
 func _receive_lateral_enemy_damage(enemy: Node) -> void:
 	if not can_receive_enemy_damage:
@@ -161,17 +176,21 @@ func _receive_lateral_enemy_damage(enemy: Node) -> void:
 	await get_tree().create_timer(ENEMY_DAMAGE_COOLDOWN).timeout
 	can_receive_enemy_damage = true
 
+
 func receive_damage(amount: float) -> void:
 	if is_restarting:
 		return
 
 	GameManager.take_damage(amount)
 
+
 func attack_damage() -> float:
 	return GameManager.get_attack_damage()
 
+
 func bounce_from_enemy() -> void:
 	velocity.y = ENEMY_BOUNCE_VELOCITY
+
 
 func _on_player_died() -> void:
 	if is_restarting:
@@ -184,6 +203,7 @@ func _on_player_died() -> void:
 
 	await _show_death_screen_and_restart()
 
+
 func _show_death_screen_and_restart() -> void:
 	var black_screen: ColorRect = ColorRect.new()
 	black_screen.name = "DeathBlackScreen"
@@ -191,7 +211,10 @@ func _show_death_screen_and_restart() -> void:
 	black_screen.mouse_filter = Control.MOUSE_FILTER_STOP
 	black_screen.z_index = 9999
 
-	hud.add_child(black_screen)
+	if hud != null:
+		hud.add_child(black_screen)
+	else:
+		add_child(black_screen)
 
 	black_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
 	black_screen.offset_left = 0
@@ -208,13 +231,39 @@ func _show_death_screen_and_restart() -> void:
 	GameManager.reset_player_stats()
 	get_tree().reload_current_scene()
 
+
 func _is_any_menu_open() -> bool:
 	if curriculum != null and curriculum.visible:
 		return true
 
-	var skill_tree: Node = hud.get_node_or_null("skill_tree")
+	var skill_tree: Node = null
+
+	if hud != null:
+		skill_tree = hud.get_node_or_null("skill_tree")
+
 	return skill_tree != null and skill_tree.visible
 
+
 func _is_skill_tree_open() -> bool:
-	var skill_tree: Node = hud.get_node_or_null("skill_tree")
+	var skill_tree: Node = null
+
+	if hud != null:
+		skill_tree = hud.get_node_or_null("skill_tree")
+
 	return skill_tree != null and skill_tree.visible
+
+
+# Opcional: SaveManager llama a estas funciones si existen.
+# Así queda preparado por si más adelante quieres guardar datos propios del jugador.
+
+func get_save_data() -> Dictionary:
+	return {
+		"coins": coins
+	}
+
+
+func load_save_data(data: Dictionary) -> void:
+	coins = int(data.get("coins", coins))
+
+	if hud != null and hud.has_method("set_coins"):
+		hud.set_coins(coins)

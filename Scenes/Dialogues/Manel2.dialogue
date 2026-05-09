@@ -31,4 +31,5 @@ Coronel Manel: Pues date prisa cadete.
 ~ mision_hormiguero_completada
 Coronel Manel: Bien hecho cadete.
 Coronel Manel: Has dado el primer paso para salir del hormiguero.
+do GameManager.unlock_respawn_checkpoint()
 => END

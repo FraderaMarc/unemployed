@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dpg454wiawvu0"]
+
+[ext_resource type="Script" path="res://Scripts/checkpoint.gd" id="1_checkpoint"]
+[ext_resource type="Texture2D" uid="uid://c3dgkg217ht73" path="res://assets/Idle/BusStop/BusStop.png" id="2_i3j2t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_checkpoint"]
+size = Vector2(32, 27)
+
+[node name="Checkpoint" type="Area2D" unique_id=2031158325]
+script = ExtResource("1_checkpoint")
+spawn_point_path = NodePath("SpawnPoint")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2069637691]
+position = Vector2(42, 34.5)
+shape = SubResource("RectangleShape2D_checkpoint")
+
+[node name="SpawnPoint" type="Node2D" parent="." unique_id=2046858732]
+position = Vector2(24, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=596323203]
+position = Vector2(57.375008, 31.937508)
+scale = Vector2(0.05377604, 0.05502193)
+texture = ExtResource("2_i3j2t")

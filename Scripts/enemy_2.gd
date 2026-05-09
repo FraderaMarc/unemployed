@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@export var persistent_enemy_id: String = ""
+
 @export var speed: float = 80.0
 @export var direction: int = -1
 
@@ -22,6 +24,12 @@ var can_receive_stomp: bool = true
 var is_dead: bool = false
 
 func _ready() -> void:
+	var enemy_id: String = _get_persistent_enemy_id()
+
+	if GameManager.is_enemy_defeated(enemy_id):
+		queue_free()
+		return
+
 	add_to_group("enemy")
 	vida = vida_maxima
 	_connect_damage_area()
@@ -44,6 +52,12 @@ func _physics_process(delta: float) -> void:
 		_turn_around()
 
 	_check_damage_area_contacts()
+
+func _get_persistent_enemy_id() -> String:
+	if persistent_enemy_id.strip_edges() != "":
+		return persistent_enemy_id
+
+	return "%s|%s" % [scene_file_path, str(get_path())]
 
 func _connect_damage_area() -> void:
 	if damage_area == null:
@@ -157,6 +171,8 @@ func die() -> void:
 
 	is_dead = true
 	velocity = Vector2.ZERO
+
+	GameManager.register_defeated_enemy(_get_persistent_enemy_id())
 
 	_drop_paper()
 
