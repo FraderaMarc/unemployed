@@ -1,4 +1,9 @@
 ~ start
+if GameManager.intro_dialogue_played
+	=> END
+
+do GameManager.mark_intro_dialogue_played()
+
 Mercedes: [speed=1.5]¡¡¡MARCOOOSSSS!!!
 Marcos: Però que pasa???
 Mercedes: Que crees que passa. Todo el dia ahi tirado en el sofa, sin dar ni brote.
