@@ -3,6 +3,7 @@ extends Node
 const SAVE_FILE_NAME: String = "savegame.json"
 const SAVE_PATH: String = "user://" + SAVE_FILE_NAME
 
+# Cambia esta ruta si tu primera escena jugable no es Map.tscn.
 const FIRST_GAME_SCENE: String = "res://Scenes/Map.tscn"
 
 const INTRO_DIALOGUE_PATH: String = "res://assets/Dialogues/Mercedes.dialogue"
@@ -12,7 +13,8 @@ var pending_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
 var pending_player_data: Dictionary = {}
 
-var should_play_intro_dialogue: bool = false
+# No se guarda. Solo indica que esta carga viene desde "Nueva partida".
+var start_intro_dialogue: bool = false
 
 
 func has_save() -> bool:
@@ -23,7 +25,7 @@ func new_game() -> void:
 	delete_save()
 	GameManager.reset_game_state()
 
-	should_play_intro_dialogue = true
+	start_intro_dialogue = true
 	GameManager.intro_dialogue_played = false
 
 	var error: Error = get_tree().change_scene_to_file(FIRST_GAME_SCENE)
@@ -33,7 +35,7 @@ func new_game() -> void:
 
 
 func continue_game() -> bool:
-	should_play_intro_dialogue = false
+	start_intro_dialogue = false
 
 	var save_data: Dictionary = _read_save_file()
 
@@ -43,8 +45,8 @@ func continue_game() -> bool:
 	var game_manager_data: Dictionary = save_data.get("game_manager", {})
 	GameManager.load_save_data(game_manager_data)
 
-	# Seguridad extra: al continuar nunca debe salir el diálogo inicial.
-	GameManager.intro_dialogue_played = true
+	# Al continuar partida nunca debe salir el diálogo inicial.
+	GameManager.mark_intro_dialogue_played()
 
 	var position_array: Array = save_data.get("player_position", [])
 	has_pending_player_position = position_array.size() >= 2
@@ -55,6 +57,7 @@ func continue_game() -> bool:
 			float(position_array[1])
 		)
 
+		# Asegura que morir después de continuar reaparece en el checkpoint cargado.
 		GameManager.set_respawn_position(pending_player_position)
 
 	pending_player_data = save_data.get("player", {})
@@ -123,14 +126,14 @@ func get_player() -> Node:
 
 
 func play_intro_dialogue_if_needed() -> void:
-	if not should_play_intro_dialogue:
+	if not start_intro_dialogue:
 		return
 
 	if GameManager.intro_dialogue_played:
+		start_intro_dialogue = false
 		return
 
-	should_play_intro_dialogue = false
-	GameManager.intro_dialogue_played = true
+	start_intro_dialogue = false
 
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -143,8 +146,6 @@ func play_intro_dialogue_if_needed() -> void:
 		load(INTRO_DIALOGUE_PATH),
 		INTRO_DIALOGUE_TITLE
 	)
-
-	save_current_game()
 
 
 func _save_game_at_position(spawn_position: Vector2) -> bool:

@@ -40,7 +40,7 @@ var has_respawn_position: bool = false
 # ENEMIGOS DERROTADOS
 # -------------------------
 # Se mantiene para compatibilidad con scripts antiguos.
-# Para los enemigos que sueltan llapis/paper, ahora es mejor depender de GameManager.llapis / GameManager.paper.
+# Para enemigos que sueltan llapis/paper, es mejor depender de GameManager.llapis / GameManager.paper.
 var defeated_enemies: Dictionary = {}
 
 # -------------------------
@@ -193,6 +193,16 @@ func _check_skill_tree_unlock() -> void:
 
 func unlock_first_skill() -> void:
 	first_skill_unlocked = true
+
+
+# Usado por Mercedes.dialogue.
+# No borrar: evita que el diálogo inicial se repita.
+func mark_intro_dialogue_played() -> void:
+	intro_dialogue_played = true
+
+
+func should_play_intro_dialogue() -> bool:
+	return not intro_dialogue_played
 
 
 # -------------------------
@@ -443,7 +453,10 @@ func load_save_data(data: Dictionary) -> void:
 	skillcoins = int(data.get("skillcoins", 1))
 	llapis = bool(data.get("llapis", false))
 	paper = bool(data.get("paper", false))
+
+	# Por defecto true para que saves antiguos no repitan el diálogo inicial.
 	intro_dialogue_played = bool(data.get("intro_dialogue_played", true))
+
 	skill_tree_opened_once = bool(data.get("skill_tree_opened_once", false))
 	first_skill_unlocked = bool(data.get("first_skill_unlocked", false))
 	skill_levels = data.get("skill_levels", {}).duplicate(true)

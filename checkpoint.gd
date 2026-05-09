@@ -17,11 +17,14 @@ func _on_body_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"):
 		return
 
-	activated = true
-
 	var spawn_position: Vector2 = _get_spawn_position()
 
+	activated = true
+
+	# Esto es lo importante para reaparecer aquí al morir.
 	GameManager.set_respawn_position(spawn_position)
+
+	# Esto es para guardar partida y poder continuar desde aquí.
 	SaveManager.save_checkpoint(spawn_position)
 
 

@@ -18,7 +18,13 @@ var curriculum: Control = null
 func _ready() -> void:
 	add_to_group("player")
 
+	# Si todavía no hay checkpoint, esta posición será el respawn inicial.
+	# Si ya hay checkpoint, NO lo sobrescribe.
 	GameManager.set_initial_respawn_position(global_position)
+
+	# Al cargar/reiniciar la escena, coloca al jugador en:
+	# - último checkpoint si existe
+	# - posición inicial si no existe checkpoint
 	global_position = GameManager.get_respawn_position(global_position)
 
 	if hud != null:
@@ -252,9 +258,6 @@ func _is_skill_tree_open() -> bool:
 
 	return skill_tree != null and skill_tree.visible
 
-
-# Opcional: SaveManager llama a estas funciones si existen.
-# Así queda preparado por si más adelante quieres guardar datos propios del jugador.
 
 func get_save_data() -> Dictionary:
 	return {
