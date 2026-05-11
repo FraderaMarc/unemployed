@@ -2872,7 +2872,7 @@ position = Vector2(416, 56)
 position = Vector2(104, -40)
 
 [node name="Node2D" parent="." unique_id=951309466 instance=ExtResource("8_ngcqm")]
-position = Vector2(736, 360)
+position = Vector2(712, 359)
 
 [node name="Enemy_1" parent="." unique_id=1343753364 instance=ExtResource("13_46meq")]
 position = Vector2(-144, 624)
@@ -2933,6 +2933,10 @@ drop_scene_path = "res://Scenes/SkillCoin.tscn"
 [node name="Checkpoint" parent="." unique_id=2031158325 instance=ExtResource("17_6hulr")]
 z_index = -1
 position = Vector2(2352, 436)
+
+[node name="Checkpoint3" parent="." unique_id=591688288 instance=ExtResource("17_6hulr")]
+z_index = -1
+position = Vector2(1984, 115)
 
 [node name="Checkpoint2" parent="." unique_id=221012572 instance=ExtResource("17_6hulr")]
 z_index = -1
@@ -3044,4 +3048,4 @@ position = Vector2(1259, -344)
 position = Vector2(2808, 495)
 
 [node name="Obrero" parent="." unique_id=234802255 instance=ExtResource("23_dumge")]
-position = Vector2(1357, -384)
+position = Vector2(1360, -362)
