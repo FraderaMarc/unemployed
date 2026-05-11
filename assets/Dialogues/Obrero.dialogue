@@ -1,9 +1,25 @@
 ~ start
-Marcos: Coño un negro!!!!
-Obrero Curdu: Siii holaaa! Fas una VollDamm??
-Marcos: Estoy buscando trabajo, me ayudas?
-Curdu: Jo no et puc ajudar estic de pràctiques encara, no soc treballador.
-Marcos: Menudo pringado, no.
-Curdu: Jo si fos tu acabaria d'omplenar el curriculum.
-Curdu: 🎶🎶La primavera trompeteraaa🎶🎶
+if GameManager.is_mission_completed("completa_curriculum")
+	Curdu: Bona feina, Marcos. Ja tens el currículum complet.
+	Marcos: Ole ole.
+	=> END
+
+if GameManager.has_mission("completa_curriculum")
+	Curdu: Encara has d'acabar d'omplenar el currículum.
+	Marcos: Que pesao tio.
+	Curdu: Quan el tinguis complet, torna.
+	=> END
+
+do GameManager.start_mission("completa_curriculum")
+
+Marcos: Coño un negro!!
+Curdu: Si holaaa!! Una VollDamm?
+Marcos: Estoy buscando trabajo me ayudas?
+Curdu: Jo no et puc ajudar gaire, encara estic de pràctiques.
+Marcos: Menudo pringado, no?
+Curdu: Jo si fos tu acabaria d'omplenar el currículum.
+Curdu: Primer completa tot l'arbre d'habilitats del currículum.
+Marcos: Que palo prefiero hacer una calculadora en Minecraft.
+Curdu: 🎶🎶 La primavera trompeteraaa 🎶🎶
+
 => END
