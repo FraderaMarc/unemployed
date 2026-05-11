@@ -4,6 +4,7 @@ const JUMP_VELOCITY: float = -325.0
 const ENEMY_BOUNCE_VELOCITY: float = -240.0
 const ENEMY_DAMAGE_COOLDOWN: float = 1.0
 const CURRICULUM_SCENE: PackedScene = preload("res://Scenes/curriculum.tscn")
+const DIRECTOREO_GIF_PATH: String = "res://GifMarcos.gif"
 
 @onready var anim: AnimatedSprite2D = $Sprite2D
 @onready var hud: Node = get_node_or_null("/root/Map/CanvasLayer")
@@ -40,8 +41,14 @@ func _ready() -> void:
 	if not GameManager.player_died.is_connected(_on_player_died):
 		GameManager.player_died.connect(_on_player_died)
 
+	if not GameManager.mission_completed.is_connected(_on_mission_completed):
+		GameManager.mission_completed.connect(_on_mission_completed)
+
 	if GameManager.has_both_items() and GameManager.skill_tree_opened_once:
 		_on_skill_tree_unlocked()
+
+	if GameManager.is_mission_completed("completa_curriculum"):
+		call_deferred("_show_directoreo_overlay")
 
 
 func add_coin(amount: int = 1) -> void:
@@ -240,6 +247,87 @@ func _show_death_screen_and_restart() -> void:
 		SaveManager.continue_game()
 	else:
 		get_tree().reload_current_scene()
+
+
+func _on_mission_completed(mission: Dictionary) -> void:
+	if str(mission.get("id", "")) != "completa_curriculum":
+		return
+
+	_show_directoreo_overlay()
+
+
+func _show_directoreo_overlay() -> void:
+	var overlay_parent: Node = hud
+
+	if overlay_parent == null:
+		overlay_parent = get_node_or_null("/root/Map/CanvasLayer")
+
+	if overlay_parent == null:
+		overlay_parent = get_tree().current_scene
+
+	if overlay_parent == null:
+		push_warning("No se ha encontrado dónde poner GifMarcos.")
+		return
+
+	if overlay_parent.has_node("DirectoreoOverlay"):
+		return
+
+	if not ResourceLoader.exists(DIRECTOREO_GIF_PATH):
+		push_warning("No existe GifMarcos en esta ruta: " + DIRECTOREO_GIF_PATH)
+		return
+
+	if not Engine.has_singleton("GifManager"):
+		push_warning("No existe GifManager. Instala y activa el plugin Godot GIF.")
+		return
+
+	var gif_manager: Object = Engine.get_singleton("GifManager")
+	var animated_texture_resource: Variant = gif_manager.call("animated_texture_from_file", DIRECTOREO_GIF_PATH)
+
+	if animated_texture_resource == null:
+		push_warning("No se ha podido convertir GifMarcos.gif a AnimatedTexture.")
+		return
+
+	if not animated_texture_resource is Texture2D:
+		push_warning("GifMarcos.gif no se ha convertido a Texture2D/AnimatedTexture.")
+		return
+
+	var overlay: Control = Control.new()
+	overlay.name = "DirectoreoOverlay"
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.z_index = 99999
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.offset_left = 0
+	overlay.offset_top = 0
+	overlay.offset_right = 0
+	overlay.offset_bottom = 0
+
+	var background: ColorRect = ColorRect.new()
+	background.name = "Background"
+	background.color = Color(0, 0, 0, 0.35)
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	background.set_anchors_preset(Control.PRESET_FULL_RECT)
+	background.offset_left = 0
+	background.offset_top = 0
+	background.offset_right = 0
+	background.offset_bottom = 0
+	overlay.add_child(background)
+
+	var texture_rect: TextureRect = TextureRect.new()
+	texture_rect.name = "GifMarcos"
+	texture_rect.texture = animated_texture_resource as Texture2D
+	texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	texture_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	texture_rect.offset_left = 80
+	texture_rect.offset_top = 40
+	texture_rect.offset_right = -80
+	texture_rect.offset_bottom = -40
+	overlay.add_child(texture_rect)
+
+	overlay_parent.add_child(overlay)
+
+	print("GifMarcos animado mostrado correctamente.")
 
 
 func _is_any_menu_open() -> bool:

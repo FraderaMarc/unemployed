@@ -496,7 +496,7 @@ func load_save_data(data: Dictionary) -> void:
 
 
 func reset_game_state() -> void:
-	skillcoins = 1
+	skillcoins = 31
 	llapis = false
 	paper = false
 	intro_dialogue_played = false

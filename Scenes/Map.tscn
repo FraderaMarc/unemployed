@@ -2891,6 +2891,15 @@ drop_scene_path = "res://Scenes/SkillCoin.tscn"
 [node name="Coin3" parent="." unique_id=1878941462 instance=ExtResource("3_etk83")]
 position = Vector2(2880, 576)
 
+[node name="Coin12" parent="." unique_id=257258032 instance=ExtResource("3_etk83")]
+position = Vector2(2768, 232)
+
+[node name="Coin13" parent="." unique_id=1498634536 instance=ExtResource("3_etk83")]
+position = Vector2(2736, 232)
+
+[node name="Coin11" parent="." unique_id=1622519109 instance=ExtResource("3_etk83")]
+position = Vector2(2704, 232)
+
 [node name="Coin7" parent="." unique_id=1988507793 instance=ExtResource("3_etk83")]
 position = Vector2(2802, -60)
 
@@ -3045,7 +3054,7 @@ position = Vector2(1131, 26)
 position = Vector2(1259, -344)
 
 [node name="Pan5" parent="." unique_id=2142559706 instance=ExtResource("22_nitb1")]
-position = Vector2(2808, 495)
+position = Vector2(2776, 480)
 
 [node name="Obrero" parent="." unique_id=234802255 instance=ExtResource("23_dumge")]
 position = Vector2(1360, -362)

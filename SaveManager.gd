@@ -13,8 +13,18 @@ var pending_player_position: Vector2 = Vector2.ZERO
 var has_pending_player_position: bool = false
 var pending_player_data: Dictionary = {}
 
-# No se guarda. Solo indica que esta carga viene desde "Nueva partida".
 var start_intro_dialogue: bool = false
+var is_loading_game: bool = false
+var is_autosaving: bool = false
+
+
+func _ready() -> void:
+	call_deferred("_connect_game_manager_signals")
+
+
+func _connect_game_manager_signals() -> void:
+	if not GameManager.missions_changed.is_connected(_on_game_progress_changed):
+		GameManager.missions_changed.connect(_on_game_progress_changed)
 
 
 func has_save() -> bool:
@@ -22,31 +32,36 @@ func has_save() -> bool:
 
 
 func new_game() -> void:
+	is_loading_game = true
+
 	delete_save()
 	GameManager.reset_game_state()
 
 	start_intro_dialogue = true
-	GameManager.intro_dialogue_played = false
 
 	var error: Error = get_tree().change_scene_to_file(FIRST_GAME_SCENE)
 
 	if error != OK:
 		push_error("No se ha podido cargar la escena inicial: " + FIRST_GAME_SCENE)
 
+	is_loading_game = false
 
-func continue_game() -> bool:
+
+func continue_game(reset_player_stats_after_load: bool = false) -> bool:
 	start_intro_dialogue = false
+	is_loading_game = true
 
 	var save_data: Dictionary = _read_save_file()
 
 	if save_data.is_empty():
+		is_loading_game = false
 		return false
 
 	var game_manager_data: Dictionary = save_data.get("game_manager", {})
 	GameManager.load_save_data(game_manager_data)
 
-	# Al continuar partida nunca debe salir el diálogo inicial.
-	GameManager.mark_intro_dialogue_played()
+	if reset_player_stats_after_load:
+		GameManager.reset_player_stats()
 
 	var position_array: Array = save_data.get("player_position", [])
 	has_pending_player_position = position_array.size() >= 2
@@ -57,15 +72,13 @@ func continue_game() -> bool:
 			float(position_array[1])
 		)
 
-		# Asegura que morir después de continuar reaparece en el checkpoint cargado.
-		GameManager.set_respawn_position(pending_player_position)
-
 	pending_player_data = save_data.get("player", {})
 
 	var scene_path: String = str(save_data.get("scene_path", FIRST_GAME_SCENE))
 	var error: Error = get_tree().change_scene_to_file(scene_path)
 
 	if error != OK:
+		is_loading_game = false
 		push_error("No se ha podido cargar la escena guardada: " + scene_path)
 		return false
 
@@ -89,10 +102,44 @@ func save_current_game() -> bool:
 		push_warning("El jugador encontrado no es Node2D.")
 		return false
 
-	var player_position: Vector2 = (player as Node2D).global_position
-	GameManager.set_respawn_position(player_position)
+	return _save_game_at_position((player as Node2D).global_position)
 
-	return _save_game_at_position(player_position)
+
+func save_progress_at_respawn_position() -> bool:
+	var spawn_position: Vector2 = _get_respawn_or_player_position()
+	return _save_game_at_position(spawn_position)
+
+
+func _on_game_progress_changed() -> void:
+	if is_loading_game:
+		return
+
+	if is_autosaving:
+		return
+
+	call_deferred("_autosave_progress_at_respawn_position")
+
+
+func _autosave_progress_at_respawn_position() -> void:
+	if is_loading_game:
+		return
+
+	if is_autosaving:
+		return
+
+	is_autosaving = true
+	save_progress_at_respawn_position()
+	is_autosaving = false
+
+
+func _get_respawn_or_player_position() -> Vector2:
+	var fallback_position: Vector2 = Vector2.ZERO
+	var player: Node = get_player()
+
+	if player != null and player is Node2D:
+		fallback_position = (player as Node2D).global_position
+
+	return GameManager.get_respawn_position(fallback_position)
 
 
 func delete_save() -> void:
@@ -127,10 +174,6 @@ func get_player() -> Node:
 
 func play_intro_dialogue_if_needed() -> void:
 	if not start_intro_dialogue:
-		return
-
-	if GameManager.intro_dialogue_played:
-		start_intro_dialogue = false
 		return
 
 	start_intro_dialogue = false
@@ -226,6 +269,7 @@ func _apply_pending_player_after_scene_loaded() -> void:
 	var player: Node = get_player()
 
 	if player == null:
+		is_loading_game = false
 		push_warning("No se ha encontrado jugador después de cargar la partida.")
 		return
 
@@ -237,3 +281,4 @@ func _apply_pending_player_after_scene_loaded() -> void:
 
 	has_pending_player_position = false
 	pending_player_data = {}
+	is_loading_game = false

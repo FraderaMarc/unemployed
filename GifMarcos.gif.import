@@ -1,0 +1,16 @@
+[remap]
+
+importer="texture_gif"
+importer_version=1
+type="GIFTexture"
+uid="uid://c822syhs84mwu"
+path="res://.godot/imported/GifMarcos.gif-17209c651b25dc1ffe0a67b5d8957cba.res"
+
+[deps]
+
+source_file="res://GifMarcos.gif"
+dest_files=["res://.godot/imported/GifMarcos.gif-17209c651b25dc1ffe0a67b5d8957cba.res"]
+
+[params]
+
+storage/compress=true
