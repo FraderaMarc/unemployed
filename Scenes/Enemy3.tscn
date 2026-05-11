@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://cvdmqcjf10hu0"]
+
+[ext_resource type="Script" uid="uid://chwwyxo48k2bi" path="res://Scripts/enemy_1.gd" id="1_6708m"]
+[ext_resource type="Texture2D" uid="uid://kvqupguvrto3" path="res://assets/Idle/Enemigos/Grillo/Grillo Walk/Grillo_Walk_1.png" id="2_dwjjt"]
+[ext_resource type="Texture2D" uid="uid://dkw77hpxphv5x" path="res://assets/Idle/Enemigos/Grillo/Grillo Walk/Grillo_Walk_2.png" id="3_1wk76"]
+[ext_resource type="Texture2D" uid="uid://c5j18tvln1k6w" path="res://assets/Idle/Enemigos/Grillo/Grillo Walk/Grillo_Walk_3.png" id="4_5wx5c"]
+[ext_resource type="Texture2D" uid="uid://bbprj7pe8lj2b" path="res://assets/Idle/Enemigos/Grillo/Grillo Walk/Grillo_Walk_4.png" id="5_kqgpx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1agw"]
+atlas = ExtResource("2_dwjjt")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xrf5s"]
+atlas = ExtResource("3_1wk76")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dhfw"]
+atlas = ExtResource("4_5wx5c")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mcyxo"]
+atlas = ExtResource("5_kqgpx")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tw7yd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1agw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xrf5s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1dhfw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mcyxo")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cr6q"]
+size = Vector2(9, 6.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_intvb"]
+size = Vector2(16.5, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slo0k"]
+size = Vector2(10, 22)
+
+[node name="Enemy_1" type="CharacterBody2D" unique_id=1596441519]
+script = ExtResource("1_6708m")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1378677171]
+position = Vector2(10, 19)
+scale = Vector2(0.03282345, 0.032381997)
+sprite_frames = SubResource("SpriteFrames_tw7yd")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.19848084
+
+[node name="Area2D" type="Area2D" parent="." unique_id=552161545]
+
+[node name="TopAnt" type="CollisionShape2D" parent="Area2D" unique_id=1935650103]
+position = Vector2(8, 12)
+shape = SubResource("RectangleShape2D_8cr6q")
+
+[node name="Area2D2" type="Area2D" parent="." unique_id=865603481]
+
+[node name="BottomAnt" type="CollisionShape2D" parent="Area2D2" unique_id=950979933]
+position = Vector2(4.25, 23)
+shape = SubResource("RectangleShape2D_intvb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=267974451]
+position = Vector2(7, 21)
+shape = SubResource("RectangleShape2D_slo0k")

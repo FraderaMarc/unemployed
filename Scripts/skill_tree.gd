@@ -5,6 +5,14 @@ const FIRST_SKILL_NAME := "Skill1"
 const SKILL2_HEALTH_INCREASE: float = 15.0
 const SKILL2_A_DAMAGE_INCREASE: float = 3.0
 const SKILL3_RESISTANCE_INCREASE: float = 3.0
+const ESCUDO1_RESISTANCE_INCREASE: float = 5.0
+const ESCUDO2_RESISTANCE_INCREASE: float = 7.0
+const VIDA1_HEALTH_INCREASE: float = 17.0
+const VIDA3_HEALTH_INCREASE: float = 19.0
+const VIDA2_HEALTH_INCREASE: float = 21.0
+const DAÑO1_DAMAGE_INCREASE: float = 6.0
+const DAÑO2_DAMAGE_INCREASE: float = 9.0
+const DAÑO3_DAMAGE_INCREASE: float = 15.0
 
 var curriculum: Control = null
 
@@ -12,7 +20,15 @@ var skill_max_levels: Dictionary = {
 	"Skill1": 1,
 	"Skill2": 1,
 	"Skill2_A": 3,
-	"Skill3": 3
+	"Skill3": 3,
+	"Escudo1": 3,
+	"Escudo2": 3,
+	"Daño1": 3,
+	"Daño2": 3,
+	"Daño3": 3,
+	"Vida1": 3,
+	"Vida2": 3,
+	"Vida3": 3
 }
 
 
@@ -64,6 +80,9 @@ func _on_skill_button_pressed(button: BaseButton) -> void:
 
 func _apply_skill_effect(skill_name: String) -> void:
 	match skill_name:
+		"Skill1":
+			pass
+
 		"Skill2":
 			GameManager.increase_max_health(SKILL2_HEALTH_INCREASE)
 
@@ -72,6 +91,30 @@ func _apply_skill_effect(skill_name: String) -> void:
 
 		"Skill3":
 			GameManager.increase_max_resistance(SKILL3_RESISTANCE_INCREASE)
+
+		"Escudo1":
+			GameManager.increase_max_resistance(ESCUDO1_RESISTANCE_INCREASE)
+
+		"Escudo2":
+			GameManager.increase_max_resistance(ESCUDO2_RESISTANCE_INCREASE)
+
+		"Vida1":
+			GameManager.increase_max_health(VIDA1_HEALTH_INCREASE)
+
+		"Vida2":
+			GameManager.increase_max_health(VIDA2_HEALTH_INCREASE)
+
+		"Vida3":
+			GameManager.increase_max_health(VIDA3_HEALTH_INCREASE)
+
+		"Daño1":
+			GameManager.increase_attack_damage(DAÑO1_DAMAGE_INCREASE)
+
+		"Daño2":
+			GameManager.increase_attack_damage(DAÑO2_DAMAGE_INCREASE)
+
+		"Daño3":
+			GameManager.increase_attack_damage(DAÑO3_DAMAGE_INCREASE)
 
 
 func _on_skillcoins_changed(_total: int) -> void:

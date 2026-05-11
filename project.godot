@@ -39,7 +39,7 @@ open_curriculum={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://assets/Dialogues/Mercedes.dialogue", "res://assets/Dialogues/Inutil.dialogue", "res://assets/Dialogues/Manel.dialogue", "res://Scenes/Dialogues/Manel2.dialogue")
+locale/translations_pot_files=PackedStringArray("res://assets/Dialogues/Mercedes.dialogue", "res://assets/Dialogues/Inutil.dialogue", "res://assets/Dialogues/Manel.dialogue", "res://Scenes/Dialogues/Manel2.dialogue", "res://assets/Dialogues/Obrero.dialogue")
 
 [physics]
 

@@ -48,10 +48,50 @@ texture_normal = ExtResource("3_kvjh1")
 
 [node name="Skill3" parent="Skill1/Skill2" unique_id=1831262429 instance=ExtResource("3_2v864")]
 layout_mode = 0
-offset_left = 50.0
+offset_left = 90.0
+offset_top = -120.0
+offset_right = 130.0
+offset_bottom = -80.0
+texture_normal = ExtResource("4_y7ohu")
+
+[node name="Escudo1" parent="Skill1/Skill2/Skill3" unique_id=2086731579 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -4.0
+offset_top = -116.0
+offset_right = 36.0
+offset_bottom = -76.0
+texture_normal = ExtResource("4_y7ohu")
+
+[node name="Escudo2" parent="Skill1/Skill2/Skill3/Escudo1" unique_id=876766326 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -111.0
+offset_right = 38.0
+offset_bottom = -71.0
+texture_normal = ExtResource("4_y7ohu")
+
+[node name="Vida1" parent="Skill1/Skill2" unique_id=964206885 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -60.0
 offset_top = -127.0
-offset_right = 90.0
+offset_right = -20.0
 offset_bottom = -87.0
+texture_normal = ExtResource("4_y7ohu")
+
+[node name="Vida2" parent="Skill1/Skill2/Vida1" unique_id=944794866 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -117.0
+offset_right = 35.0
+offset_bottom = -77.0
+texture_normal = ExtResource("4_y7ohu")
+
+[node name="Vida 3" parent="Skill1/Skill2/Vida1/Vida2" unique_id=1327503497 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -8.0
+offset_top = -117.0
+offset_right = 32.0
+offset_bottom = -77.0
 texture_normal = ExtResource("4_y7ohu")
 
 [node name="Skill2_A" parent="Skill1" unique_id=440869825 instance=ExtResource("3_2v864")]
@@ -60,6 +100,28 @@ offset_left = -127.0
 offset_top = -109.0
 offset_right = -87.0
 offset_bottom = -69.0
+texture_normal = ExtResource("3_7mv6q")
+
+[node name="Daño1" parent="Skill1/Skill2_A" unique_id=1770568651 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = -10.0
+offset_top = -112.0
+offset_right = 30.0
+offset_bottom = -72.0
+texture_normal = ExtResource("3_7mv6q")
+
+[node name="Daño2" parent="Skill1/Skill2_A/Daño1" unique_id=155140030 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_top = -107.0
+offset_bottom = -67.0
+texture_normal = ExtResource("3_7mv6q")
+
+[node name="Daño3" parent="Skill1/Skill2_A/Daño1/Daño2" unique_id=551488712 instance=ExtResource("3_2v864")]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -113.0
+offset_right = 43.0
+offset_bottom = -73.0
 texture_normal = ExtResource("3_7mv6q")
 
 [node name="Label" type="Label" parent="." unique_id=1419565406]

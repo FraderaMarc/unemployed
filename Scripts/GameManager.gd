@@ -15,6 +15,12 @@ const MISSIONS: Dictionary = {
 		"title": "Investiga cómo salir del hormiguero",
 		"description": "Busca pistas para descubrir cómo escapar del hormiguero.",
 		"next": ""
+	},
+
+	"completa_curriculum": {
+		"title": "Completa el currículum",
+		"description": "Abre el currículum y desbloquea tu primera habilidad.",
+		"next": ""
 	}
 }
 

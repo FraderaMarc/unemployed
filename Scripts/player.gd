@@ -235,7 +235,11 @@ func _show_death_screen_and_restart() -> void:
 	await get_tree().create_timer(0.6).timeout
 
 	GameManager.reset_player_stats()
-	get_tree().reload_current_scene()
+
+	if SaveManager.has_save():
+		SaveManager.continue_game()
+	else:
+		get_tree().reload_current_scene()
 
 
 func _is_any_menu_open() -> bool:

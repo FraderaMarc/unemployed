@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://dkkvl4plw46rm"]
+
+[ext_resource type="Script" uid="uid://chwwyxo48k2bi" path="res://Scripts/enemy_1.gd" id="1_cy060"]
+[ext_resource type="Texture2D" uid="uid://b2kg0jwfqe782" path="res://assets/Idle/Enemigos/Mantis/Mantis Andar/Mantis_Walk_1.png" id="2_cy060"]
+[ext_resource type="Texture2D" uid="uid://b1o7drgiumbur" path="res://assets/Idle/Enemigos/Mantis/Mantis Andar/Mantis_Walk_2.png" id="3_fuqge"]
+[ext_resource type="Texture2D" uid="uid://cwbj2equrl8fm" path="res://assets/Idle/Enemigos/Mantis/Mantis Andar/Mantis_Walk_3.png" id="4_sfmae"]
+[ext_resource type="Texture2D" uid="uid://bjab24x1i7d6j" path="res://assets/Idle/Enemigos/Mantis/Mantis Andar/Mantis_Walk_4.png" id="5_ghpdj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_re46y"]
+atlas = ExtResource("2_cy060")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m7hhv"]
+atlas = ExtResource("3_fuqge")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xx5o2"]
+atlas = ExtResource("4_sfmae")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3b0n"]
+atlas = ExtResource("5_ghpdj")
+region = Rect2(0, 0, 1920, 911)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tw7yd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_re46y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m7hhv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xx5o2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3b0n")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8cr6q"]
+size = Vector2(9, 6.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_intvb"]
+size = Vector2(16.5, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slo0k"]
+size = Vector2(10, 22)
+
+[node name="Enemy_1" type="CharacterBody2D" unique_id=1596441519]
+script = ExtResource("1_cy060")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1378677171]
+position = Vector2(10, 19)
+scale = Vector2(0.03282345, 0.032381997)
+sprite_frames = SubResource("SpriteFrames_tw7yd")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.08961169
+
+[node name="Area2D" type="Area2D" parent="." unique_id=552161545]
+
+[node name="TopAnt" type="CollisionShape2D" parent="Area2D" unique_id=1935650103]
+position = Vector2(8, 12)
+shape = SubResource("RectangleShape2D_8cr6q")
+
+[node name="Area2D2" type="Area2D" parent="." unique_id=865603481]
+
+[node name="BottomAnt" type="CollisionShape2D" parent="Area2D2" unique_id=950979933]
+position = Vector2(4.25, 23)
+shape = SubResource("RectangleShape2D_intvb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=267974451]
+position = Vector2(7, 21)
+shape = SubResource("RectangleShape2D_slo0k")

@@ -66,6 +66,7 @@ func continue_game() -> bool:
 
 
 func save_checkpoint(spawn_position: Vector2) -> bool:
+	GameManager.set_respawn_position(spawn_position)
 	return _save_game_at_position(spawn_position)
 
 
